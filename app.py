@@ -59,10 +59,7 @@ class Data_Block:
                 self.__max_number = number
             if number < self.__min_number:
                 self.__min_number = number
-            if number == self.__first_number:
-                self.__first_number = number
-            if number == self.__last_number:
-                self.__last_number = number
+            self.__last_number = number
         if is_prime(number):
             self.__number_of_prime_numbers += 1
         if is_even(number):
@@ -113,7 +110,7 @@ def on_error(ws, error):
 def on_open(ws):
     def run():
         while True:
-            time.sleep(60)
+            time.sleep(10)
             counter = count(start=1, step=1)
             for block in data_blocks:
                 print(f"\n\n<<<Bloque #{next(counter)}")
