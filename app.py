@@ -5,9 +5,6 @@ from itertools import count
 
 import websocket
 
-# Global variable to store the data blocks
-data_blocks = []
-
 
 # Method to know if a number is prime
 def is_prime(number):
@@ -29,15 +26,6 @@ def is_even(number):
     if number % 2 == 0:
         return True
     return False
-
-
-# Method to reset and create a list of the data blocks
-def reset_data(size=100):
-    global data_blocks
-    data_blocks.clear()
-    # init the list with 100 data blocks
-    for i in range(size):
-        data_blocks.append(DataBlock())
 
 
 # Class to store the data block
@@ -88,47 +76,53 @@ class SocketClient:
     def __init__(self):
         # Activate this if you want to see the websocket messages
         websocket.enableTrace(False)
+        self.ws = None
+        self.data_blocks = []
 
+    def start_socket(self):
+        self.reset_data()
+        # Connect to the websocket
+        self.ws = websocket.WebSocketApp("ws://209.126.82.146:8080/",
+                                         on_message=self.on_message,
+                                         on_error=self.on_error)
+        self.ws.on_open = self.on_open
 
+        # Run the websocket
+        self.ws.run_forever()
 
+    # Default method to receive the data from the server
+    def on_message(self, ws, message):
+        data = json.loads(message)
+        self.data_blocks[data["a"] - 1].update_data(data["b"])
 
-# Default method to receive the data from the server
-def on_message(ws, message):
-    data = json.loads(message)
-    data_blocks[data["a"] - 1].update_data(data["b"])
+    # Default method to print and catch errors
+    def on_error(self, ws, error):
+        print(error)
 
+    # Method to manage the logic of the program when the connection starts
+    def on_open(self, ws):
+        def run():
+            while True:
+                time.sleep(10)  # Wait 60s to start the analysis
+                counter = count(start=1, step=1)
+                # Print the recollected data in 1m
+                for block in self.data_blocks:
+                    print(f"\n\n<<<Block #{next(counter)}>>>")
+                    block.show_data()
+                self.reset_data()
 
-# Default method to print and catch errors
-def on_error(ws, error):
-    print(error)
+        # Start the thread to manage the logic of the program
+        _thread.start_new_thread(run, ())
 
-
-# Method to manage the logic of the program when the connection starts
-def on_open(ws):
-    def run():
-        global data_blocks
-        while True:
-            time.sleep(10)  # Wait 60s to start the analysis
-            counter = count(start=1, step=1)
-            # Print the recollected data in 1m
-            for block in data_blocks:
-                print(f"\n\n<<<Block #{next(counter)}>>>")
-                block.show_data()
-            reset_data()
-    # Start the thread to manage the logic of the program
-    _thread.start_new_thread(run, ())
+    # Method to reset and create a list of the data blocks
+    def reset_data(self, size=100):
+        self.data_blocks.clear()
+        # init the list with 100 data blocks
+        for i in range(size):
+            self.data_blocks.append(DataBlock())
 
 
 if __name__ == "__main__":
-    # Activate this if you want to see the websocket messages
-    websocket.enableTrace(False)
-
-    reset_data()
-    # Connect to the websocket
-    ws = websocket.WebSocketApp("ws://209.126.82.146:8080/",
-                                on_message=on_message,
-                                on_error=on_error)
-    ws.on_open = on_open
-
-    # Run the websocket
-    ws.run_forever()
+    socket = SocketClient()
+    socket.reset_data()
+    socket.start_socket()
