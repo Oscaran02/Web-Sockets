@@ -31,14 +31,17 @@ def is_even(number):
     return False
 
 
-def reset_data():
+# Method to reset and create a list of the data blocks
+def reset_data(size=100):
+    global data_blocks
     data_blocks.clear()
     # init the list with 100 data blocks
-    for i in range(100):
+    for i in range(size):
         data_blocks.append(Data_Block())
 
 
 class Data_Block:
+    # set the initial values
     def __init__(self):
         self.__max_number = None
         self.__min_number = None
@@ -48,7 +51,9 @@ class Data_Block:
         self.__number_of_even_numbers = 0
         self.__number_of_odd_numbers = 0
 
+    # Method to add and analyze a number in the data block
     def update_data(self, number):
+        # if the data block is empty (first value)
         if self.__max_number is None:
             self.__max_number = number
             self.__min_number = number
@@ -67,6 +72,7 @@ class Data_Block:
         else:
             self.__number_of_odd_numbers += 1
 
+    # Print the data block
     def show_data(self):
         print("Max number: " + str(self.__max_number))
         print("Min number: " + str(self.__min_number))
@@ -75,27 +81,6 @@ class Data_Block:
         print("Number of prime numbers: " + str(self.__number_of_prime_numbers))
         print("Number of even numbers: " + str(self.__number_of_even_numbers))
         print("Number of odd numbers: " + str(self.__number_of_odd_numbers))
-
-    def get_max_number(self):
-        return self.__max_number
-
-    def get_min_number(self):
-        return self.__min_number
-
-    def get_first_number(self):
-        return self.__first_number
-
-    def get_last_number(self):
-        return self.__last_number
-
-    def get_number_of_prime_numbers(self):
-        return self.__number_of_prime_numbers
-
-    def get_number_of_even_numbers(self):
-        return self.__number_of_even_numbers
-
-    def get_number_of_odd_numbers(self):
-        return self.__number_of_odd_numbers
 
 
 def on_message(ws, message):
@@ -109,6 +94,7 @@ def on_error(ws, error):
 
 def on_open(ws):
     def run():
+        global data_blocks
         while True:
             time.sleep(10)
             counter = count(start=1, step=1)
