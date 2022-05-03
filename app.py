@@ -124,5 +124,4 @@ class SocketClient:
 
 if __name__ == "__main__":
     socket = SocketClient()
-    socket.reset_data()
     socket.start_socket()
