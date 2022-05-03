@@ -5,7 +5,7 @@ from itertools import count
 
 import websocket
 
-# init the list with 100 spaces
+# Global variable to store the data blocks
 data_blocks = []
 
 
@@ -37,19 +37,20 @@ def reset_data(size=100):
     data_blocks.clear()
     # init the list with 100 data blocks
     for i in range(size):
-        data_blocks.append(Data_Block())
+        data_blocks.append(DataBlock())
 
 
-class Data_Block:
+# Class to store the data block
+class DataBlock:
     # set the initial values
     def __init__(self):
-        self.__max_number = None
-        self.__min_number = None
-        self.__first_number = None
-        self.__last_number = None
-        self.__number_of_prime_numbers = 0
-        self.__number_of_even_numbers = 0
-        self.__number_of_odd_numbers = 0
+        self.__max_number = None  # Store the max number
+        self.__min_number = None  # Store the min number
+        self.__first_number = None  # Store the first number
+        self.__last_number = None  # Store the last number
+        self.__number_of_prime_numbers = 0  # Store the number of prime numbers
+        self.__number_of_even_numbers = 0  # Store the number of even numbers
+        self.__number_of_odd_numbers = 0  # Store the number of odd numbers
 
     # Method to add and analyze a number in the data block
     def update_data(self, number):
@@ -83,35 +84,51 @@ class Data_Block:
         print("Number of odd numbers: " + str(self.__number_of_odd_numbers))
 
 
+class SocketClient:
+    def __init__(self):
+        # Activate this if you want to see the websocket messages
+        websocket.enableTrace(False)
+
+
+
+
+# Default method to receive the data from the server
 def on_message(ws, message):
     data = json.loads(message)
-    data_blocks[data["a"]-1].update_data(data["b"])
+    data_blocks[data["a"] - 1].update_data(data["b"])
 
 
+# Default method to print and catch errors
 def on_error(ws, error):
     print(error)
 
 
+# Method to manage the logic of the program when the connection starts
 def on_open(ws):
     def run():
         global data_blocks
         while True:
-            time.sleep(10)
+            time.sleep(10)  # Wait 60s to start the analysis
             counter = count(start=1, step=1)
+            # Print the recollected data in 1m
             for block in data_blocks:
-                print(f"\n\n<<<Bloque #{next(counter)}")
+                print(f"\n\n<<<Block #{next(counter)}>>>")
                 block.show_data()
             reset_data()
-
+    # Start the thread to manage the logic of the program
     _thread.start_new_thread(run, ())
 
 
 if __name__ == "__main__":
-    # websocket.enableTrace(True)
-    # list of data blocks
+    # Activate this if you want to see the websocket messages
+    websocket.enableTrace(False)
+
     reset_data()
+    # Connect to the websocket
     ws = websocket.WebSocketApp("ws://209.126.82.146:8080/",
                                 on_message=on_message,
                                 on_error=on_error)
     ws.on_open = on_open
+
+    # Run the websocket
     ws.run_forever()
