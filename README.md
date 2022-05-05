@@ -28,7 +28,8 @@ cd <project_dir>
 ```
 
 ```shell
-pipenv run python app.py
+pipenv shell
+python app.py
 ```
 
 
