@@ -61,6 +61,34 @@ class DataBlock:
         else:
             self.__number_of_odd_numbers += 1
 
+    # Method to get the max number
+    def get_max_number(self):
+        return self.__max_number
+
+    # Method to get the min number
+    def get_min_number(self):
+        return self.__min_number
+
+    # Method to get the first number
+    def get_first_number(self):
+        return self.__first_number
+
+    # Method to get the last number
+    def get_last_number(self):
+        return self.__last_number
+
+    # Method to get the number of prime numbers
+    def get_number_of_prime_numbers(self):
+        return self.__number_of_prime_numbers
+
+    # Method to get the number of even numbers
+    def get_number_of_even_numbers(self):
+        return self.__number_of_even_numbers
+
+    # Method to get the number of odd numbers
+    def get_number_of_odd_numbers(self):
+        return self.__number_of_odd_numbers
+
     # Print the data block
     def show_data(self):
         print("Max number: " + str(self.__max_number))
