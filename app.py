@@ -1,6 +1,6 @@
+import _thread
 import json
 import time
-import _thread
 from itertools import count
 
 import websocket
