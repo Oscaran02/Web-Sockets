@@ -1,6 +1,7 @@
 import unittest
 import app
 
+
 class TestSocket(unittest.TestCase):
     def test_is_prime(self):
         self.assertTrue(app.is_prime(2))
@@ -44,8 +45,6 @@ class TestSocket(unittest.TestCase):
         self.assertEqual(data_block.get_number_of_prime_numbers(), 5)
         self.assertEqual(data_block.get_number_of_even_numbers(), 5)
         self.assertEqual(data_block.get_number_of_odd_numbers(), 5)
-
-    def
 
 
 if __name__ == '__main__':
