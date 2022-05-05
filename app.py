@@ -1,9 +1,27 @@
 import _thread
 import json
+import os
 import time
 from itertools import count
 
 import websocket
+from colorama import init, Fore
+
+
+# To clear the screen
+def clear():
+    # If the OS is Windows
+    if os.name == "nt":
+        os.system("cls")
+    # If the OS is Linux or Mac
+    else:
+        os.system("clear")
+
+
+# To change the menu screen
+def changing_screen():
+    input(Fore.MAGENTA + "Presione enter para continuar...")
+    clear()
 
 
 # Method to know if a number is prime
@@ -130,14 +148,21 @@ class SocketClient:
     # Method to manage the logic of the program when the connection starts
     def on_open(self, ws):
         def run():
+            timer = 5  # Change this to change the time between each analysis
             while True:
-                time.sleep(60)  # Wait 60s to start the analysis
+                for i in range(timer):
+                    time.sleep(1)
+                    clear()
+                    print(Fore.GREEN + "Starting analysis in " + Fore.YELLOW + str(timer - 1 - i) + "s")
                 counter = count(start=1, step=1)
                 # Print the recollected data in 1m
                 for block in self.data_blocks:
-                    print(f"\n\n<<<Block #{next(counter)}>>>")
+                    print(f"\n\n{Fore.YELLOW}----------------------------")
+                    print(f"{Fore.BLUE}<<<Block #{next(counter)}>>>")
                     block.show_data()
+                    print(f"{Fore.YELLOW}----------------------------")
                 self.reset_data()
+                changing_screen()
 
         # Start the thread to manage the logic of the program
         _thread.start_new_thread(run, ())
@@ -151,5 +176,6 @@ class SocketClient:
 
 
 if __name__ == "__main__":
+    init(autoreset=True)
     socket = SocketClient()
     socket.start_socket()
