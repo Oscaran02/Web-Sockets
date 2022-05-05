@@ -148,7 +148,7 @@ class SocketClient:
     # Method to manage the logic of the program when the connection starts
     def on_open(self, ws):
         def run():
-            timer = 5  # Change this to change the time between each analysis
+            timer = 60  # Change this to change the time between each analysis
             while True:
                 for i in range(timer):
                     time.sleep(1)
@@ -157,7 +157,7 @@ class SocketClient:
                 counter = count(start=1, step=1)
                 # Print the recollected data in 1m
                 for block in self.data_blocks:
-                    print(f"\n\n{Fore.YELLOW}----------------------------")
+                    print(f"\n{Fore.YELLOW}----------------------------")
                     print(f"{Fore.BLUE}<<<Block #{next(counter)}>>>")
                     block.show_data()
                     print(f"{Fore.YELLOW}----------------------------")
