@@ -103,7 +103,7 @@ class SocketClient:
     def on_open(self, ws):
         def run():
             while True:
-                time.sleep(10)  # Wait 60s to start the analysis
+                time.sleep(60)  # Wait 60s to start the analysis
                 counter = count(start=1, step=1)
                 # Print the recollected data in 1m
                 for block in self.data_blocks:
